@@ -38,18 +38,22 @@ namespace Service
         /// <summary>
         /// 增加一条数据
         /// </summary>
-        public bool Add(Book model)
+        public bool Add(Model.Book model)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into book(");
-            strSql.Append("DUserId,BookTime)");
+            strSql.Append("DUserId,BookTime,ProjectId,ProjectName)");
             strSql.Append(" values (");
-            strSql.Append("@DUserId,@BookTime)");
+            strSql.Append("@DUserId,@BookTime,@ProjectId,@ProjectName)");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@DUserId", MySqlDbType.VarChar,255),
-                    new MySqlParameter("@BookTime", MySqlDbType.DateTime)};
+                    new MySqlParameter("@BookTime", MySqlDbType.DateTime),
+                    new MySqlParameter("@ProjectId", MySqlDbType.Int32,11),
+                    new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255)};
             parameters[0].Value = model.DUserId;
             parameters[1].Value = model.BookTime;
+            parameters[2].Value = model.ProjectId;
+            parameters[3].Value = model.ProjectName;
 
             int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -64,20 +68,26 @@ namespace Service
         /// <summary>
         /// 更新一条数据
         /// </summary>
-        public bool Update(Book model)
+        public bool Update(Model.Book model)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("update book set ");
             strSql.Append("DUserId=@DUserId,");
-            strSql.Append("BookTime=@BookTime");
+            strSql.Append("BookTime=@BookTime,");
+            strSql.Append("ProjectId=@ProjectId,");
+            strSql.Append("ProjectName=@ProjectName");
             strSql.Append(" where BookId=@BookId");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@DUserId", MySqlDbType.VarChar,255),
                     new MySqlParameter("@BookTime", MySqlDbType.DateTime),
+                    new MySqlParameter("@ProjectId", MySqlDbType.Int32,11),
+                    new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255),
                     new MySqlParameter("@BookId", MySqlDbType.Int32,11)};
             parameters[0].Value = model.DUserId;
             parameters[1].Value = model.BookTime;
-            parameters[2].Value = model.BookId;
+            parameters[2].Value = model.ProjectId;
+            parameters[3].Value = model.ProjectName;
+            parameters[4].Value = model.BookId;
 
             int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -137,18 +147,18 @@ namespace Service
         /// <summary>
         /// 得到一个对象实体
         /// </summary>
-        public Book GetModel(int BookId)
+        public Model.Book GetModel(int BookId)
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select BookId,DUserId,BookTime from book ");
+            strSql.Append("select BookId,DUserId,BookTime,ProjectId,ProjectName from book ");
             strSql.Append(" where BookId=@BookId");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@BookId", MySqlDbType.Int32)
             };
             parameters[0].Value = BookId;
 
-            Book model = new Book();
+            Model.Book model = new Model.Book();
             DataSet ds = DbHelperMySQL.Query(strSql.ToString(), parameters);
             if (ds.Tables[0].Rows.Count > 0)
             {
@@ -164,9 +174,9 @@ namespace Service
         /// <summary>
         /// 得到一个对象实体
         /// </summary>
-        public Book DataRowToModel(DataRow row)
+        public Model.Book DataRowToModel(DataRow row)
         {
-            Book model = new Book();
+            Model.Book model = new Model.Book();
             if (row != null)
             {
                 if (row["BookId"] != null && row["BookId"].ToString() != "")
@@ -181,6 +191,14 @@ namespace Service
                 {
                     model.BookTime = DateTime.Parse(row["BookTime"].ToString());
                 }
+                if (row["ProjectId"] != null && row["ProjectId"].ToString() != "")
+                {
+                    model.ProjectId = int.Parse(row["ProjectId"].ToString());
+                }
+                if (row["ProjectName"] != null)
+                {
+                    model.ProjectName = row["ProjectName"].ToString();
+                }
             }
             return model;
         }
@@ -188,14 +206,18 @@ namespace Service
         /// <summary>
         /// 获得数据列表
         /// </summary>
-        public DataSet GetList(string strWhere)
+        public DataSet GetList(string strWhere, string orderby)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select BookId,DUserId,BookTime ");
+            strSql.Append("select BookId,DUserId,BookTime,ProjectId,ProjectName ");
             strSql.Append(" FROM book ");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
+            }
+            if (orderby != "")
+            {
+                strSql.Append(" order by " + orderby);
             }
             return DbHelperMySQL.Query(strSql.ToString());
         }

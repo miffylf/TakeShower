@@ -206,7 +206,7 @@ namespace Service
         /// <summary>
         /// 获得数据列表
         /// </summary>
-        public DataSet GetList(string strWhere)
+        public DataSet GetList(string strWhere, string orderby)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("select ProjectId,ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount ");
@@ -214,6 +214,10 @@ namespace Service
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
+            }
+            if (orderby != "")
+            {
+                strSql.Append(" order by " + orderby);
             }
             return DbHelperMySQL.Query(strSql.ToString());
         }

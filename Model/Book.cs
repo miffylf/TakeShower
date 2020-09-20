@@ -18,6 +18,8 @@ namespace Model
         private int _bookid;
         private string _duserid;
         private DateTime? _booktime;
+        private int? _projectid;
+        private string _projectname;
         /// <summary>
         /// auto_increment
         /// </summary>
@@ -41,6 +43,22 @@ namespace Model
         {
             set { _booktime = value; }
             get { return _booktime; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? ProjectId
+        {
+            set { _projectid = value; }
+            get { return _projectid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ProjectName
+        {
+            set { _projectname = value; }
+            get { return _projectname; }
         }
         #endregion Model
 
