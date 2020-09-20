@@ -109,7 +109,7 @@ namespace Takeshower.Controllers
 
             string lastName = DateTime.Now.Millisecond.ToString() + id.ToString() + ".Jpeg";
             string url = Server.MapPath("~/upload/") + lastName;
-            Bitmap bitmapTemp = Common.QRcode.CreateQRcode("http://10.150.41.56:8081/Book/BookVerification?ProjectId=" + id + "");
+            Bitmap bitmapTemp = Common.QRcode.CreateQRcode("http://10.150.41.56:8085/Book/BookVerification?ProjectId=" + id + "");
             bitmapTemp.Save(url, ImageFormat.Jpeg);
 
             string tmepUrl = "../upload/" + lastName;

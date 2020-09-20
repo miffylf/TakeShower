@@ -50,10 +50,10 @@
                             DataTable dt = ViewBag.dt as DataTable;
                             for (int i = 0; i < dt.Rows.Count; i++)
                             {
-                                <div class="col-lg-6 mb-lg-0 mb-4">
+                                <div class="col-lg-6 mb-lg-0 mb-4" onclick="Book('@dt.Rows[i]["ProjectId"]','@dt.Rows[i]["ProjectName"]')">
                                     <div class="screen-grid-wthree-pvt">
-                                        <a href="cookster.html" onclick="Book(@dt.Rows[i]["ProjectId"],@dt.Rows[i]["ProjectName"])" target="_blank">
-                                            @dt.Rows[i]["ProjectName"]  @Convert.ToDateTime(dt.Rows[i]["ProjectStartTime"]).ToString() - @Convert.ToDateTime(dt.Rows[i]["ProjectEndTime"]).ToShortTimeString()   @dt.Rows[i]["Last"] / @dt.Rows[i]["ProjectCount"]
+                                        <a href="#">
+                                            @dt.Rows[i]["ProjectId"] @dt.Rows[i]["ProjectName"]  @Convert.ToDateTime(dt.Rows[i]["ProjectStartTime"]).ToString() - @Convert.ToDateTime(dt.Rows[i]["ProjectEndTime"]).ToShortTimeString()   @dt.Rows[i]["Last"] / @dt.Rows[i]["ProjectCount"]
 
                                         </a>
                                     </div>
@@ -69,8 +69,9 @@
         </div>
     </section>
     <input type="hidden" id="UserDId" value="@ViewBag.UserDId" />
-
+    <input type="hidden" id="UserName" value="@ViewBag.UserName" />
     <footer class="cpy-right text-center">
+
         <p class="text-white">
             © 2020 张掖大地信息科技有限责任公司. All rights reserved | Design by
             @*More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>*@
@@ -119,18 +120,20 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="~/js/bootstrap.js"></script>
     <script type="text/javascript">
-        function book(id,name) {
+        function Book(id,name) {
             var url = '@Url.Action("Booking","Book")';
             var projectid = id;
             var projectname = name;
-            var duserid = $("#UserDid").val();
+            var duserid = $("#UserDId").val();
+            var UserName = $("#UserName").val();
             var param = {
                 projectid: projectid,
                 projectname: projectname,
                 duserid: duserid,
+                username: UserName,
 
             }
-            $.post(url, param, function () {
+            $.post(url, param, function (data) {
                 if (data == "Success") {
                     alert("预约成功");
                 }

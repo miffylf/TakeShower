@@ -72,14 +72,14 @@
                                             <fieldset>
                                                 <label class="block clearfix">
                                                     <span class="block input-icon input-icon-right">
-                                                        <input type="text" class="form-control" placeholder="用户名" />
+                                                        <input type="text" id="txtUserName" class="form-control" placeholder="用户名" />
                                                         <i class="ace-icon fa fa-user"></i>
                                                     </span>
                                                 </label>
 
                                                 <label class="block clearfix">
                                                     <span class="block input-icon input-icon-right">
-                                                        <input type="password" class="form-control" placeholder="密码" />
+                                                        <input type="password" id="txtPassword" class="form-control" placeholder="密码" />
                                                         <i class="ace-icon fa fa-lock"></i>
                                                     </span>
                                                 </label>
@@ -370,8 +370,8 @@
             });
         });
         $("#Login").click(function () {
-            var username = $("#username").val();
-            var password = $("#password").val();
+            var username = $("#txtUserName").val();
+            var password = $("#txtPassword").val();
             if (username == null) {
                 alert("请输入用户名");
                 return;

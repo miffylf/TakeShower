@@ -1,0 +1,49 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ReturnBook</title>
+    <meta name="viewport" content="width=device-width" />
+    <title>BookVerification</title>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/assets/js/jquery-2.1.4.min.js"></script>
+    <script src="~/assets/js/jquery-1.10.2.js"></script>
+    @*<script src="~/static/jquery/2.2.4/jquery.min.js"></script>*@
+    <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = '@Url.Action("Verification","Book")';
+            para = {
+                username: $("#UserName").val(),
+                userid: $("#UserId").val(),
+                projectid: $("#ProjectId").val(),
+            };
+            $.post(url, para, function (data) {
+                if (data == "Success") {
+                    alert("验证成功");
+
+                }
+                else {
+                    alert("验证失败");
+
+                }
+            });
+        })
+    </script>
+
+</head>
+<body>
+    <div>
+        <input type="hidden" value="@ViewBag.UserName" id="UserName" />
+        <input type="hidden" value="@ViewBag.UserId" id="UserId" />
+        <input type="hidden" value="@ViewBag.ProjectId" id="ProjectId" />
+    </div>
+</body>
+</html>

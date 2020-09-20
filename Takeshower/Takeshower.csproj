@@ -545,6 +545,7 @@
     <Content Include="Views\Manage\AddBath.cshtml" />
     <Content Include="Views\Manage\BookList.cshtml" />
     <Content Include="Views\Book\BookVerification.cshtml" />
+    <Content Include="Views\Book\ReturnBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

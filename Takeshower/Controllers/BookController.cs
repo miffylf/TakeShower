@@ -62,13 +62,15 @@ namespace Takeshower.Controllers
 
         public ActionResult BookList()
         {
+            string accessToken = GetaccessToken();
             UserModel temp = new UserModel();
             string code = System.Web.HttpContext.Current.Request["Code"];
+            code = code.Replace('#', ' ').Trim();
             if (!string.IsNullOrEmpty(code))
             {
-                temp = GetUserMode(ViewBag.accessToken, code);
+                temp = GetUserMode(accessToken, code);
             }
-            UserInfo userInfo = EnterpriseBusiness.GetUserInfo(ViewBag.accessToken, temp.userid);
+            UserInfo userInfo = EnterpriseBusiness.GetUserInfo(accessToken, temp.userid);
             DataTable dt = ProjectService.GetList("", "ProjectId desc").Tables[0];
             DataColumn dataColumn = new DataColumn("Last");
             dt.Columns.Add(dataColumn);
@@ -85,6 +87,7 @@ namespace Takeshower.Controllers
             }
             ViewBag.UserInfo = userInfo;
             ViewBag.UserDId = userInfo.userid;
+            ViewBag.UserName = userInfo.name;
             ViewBag.dt = dt;
             return View();
         }
@@ -93,6 +96,7 @@ namespace Takeshower.Controllers
         {
             string projectid = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["projectid"]) ? "0" : System.Web.HttpContext.Current.Request["projectid"].ToString();
             string projectname = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["projectname"]) ? string.Empty : System.Web.HttpContext.Current.Request["projectname"].ToString();
+            string UserName = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["username"]) ? string.Empty : System.Web.HttpContext.Current.Request["username"].ToString();
             string duserid = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["duserid"]) ? string.Empty : System.Web.HttpContext.Current.Request["duserid"].ToString();
             Project project = ProjectService.GetModel(Convert.ToInt32(projectid));
             if (Session[project.ProjectId.ToString()] == null)
@@ -104,6 +108,7 @@ namespace Takeshower.Controllers
                 book.DUserId = duserid;
                 book.ProjectId = Convert.ToInt32(projectid);
                 book.ProjectName = projectname;
+                book.UserName = UserName;
                 if (BookService.Add(book))
                 {
                     return Content("Success");
@@ -162,25 +167,45 @@ namespace Takeshower.Controllers
 
         public ActionResult Verification()
         {
-            UserModel temp = new UserModel();
-            string ProjectId = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["ProjectId"]) ? string.Empty : System.Web.HttpContext.Current.Request["ProjectId"].ToString();
-            string code = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["code"]) ? string.Empty : System.Web.HttpContext.Current.Request["code"].ToString();
-            if (!string.IsNullOrEmpty(code))
+            string ProjectId = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["projectid"]) ? string.Empty : System.Web.HttpContext.Current.Request["projectid"].ToString();
+            string userid = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["userid"]) ? string.Empty : System.Web.HttpContext.Current.Request["userid"].ToString();
+            string username = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["username"]) ? string.Empty : System.Web.HttpContext.Current.Request["username"].ToString();
+
+            if (!string.IsNullOrEmpty(userid))
             {
-                temp = GetUserMode(ViewBag.accessToken, code);
-            }
-            UserInfo userInfo = EnterpriseBusiness.GetUserInfo(ViewBag.accessToken, temp.userid);
-            Book item = new Book();
-            item = BookService.DataRowToModel(BookService.GetList(" ProjectId = " + ProjectId + " and DuserId= '" + userInfo.userid + "'", "").Tables[0].Rows[0]);
-            item.IsVerification = true;
-            if (BookService.Update(item))
-            {
-                return Content("Success");
+                Book item = new Book();
+                item = BookService.DataRowToModel(BookService.GetList(" ProjectId = " + ProjectId + " and DuserId= '" + userid + "'", "").Tables[0].Rows[0]);
+                item.IsVerification = true;
+                if (BookService.Update(item))
+                {
+                    return Content("Success");
+                }
+                else
+                {
+                    return Content("Fail");
+                }
             }
             else
             {
                 return Content("Fail");
             }
+        }
+
+        public ActionResult ReturnBook()
+        {
+            string accessToken = GetaccessToken();
+            UserModel temp = new UserModel();
+            string ProjectId = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["ProjectId"]) ? string.Empty : System.Web.HttpContext.Current.Request["ProjectId"].ToString();
+            string code = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["code"]) ? string.Empty : System.Web.HttpContext.Current.Request["code"].ToString();
+            if (!string.IsNullOrEmpty(code))
+            {
+                temp = GetUserMode(accessToken, code);
+            }
+            UserInfo userInfo = EnterpriseBusiness.GetUserInfo(accessToken, temp.userid);
+            ViewBag.UserName = userInfo.name;
+            ViewBag.UserId = userInfo.userid;
+            ViewBag.ProjectId = ProjectId;
+            return View();
         }
     }
 }
