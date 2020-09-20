@@ -216,7 +216,7 @@ namespace Service
                 }
                 if (row["Qrcode"] != null)
                 {
-                    model.ProjectName = row["Qrcode"].ToString();
+                    model.Qrcode = row["Qrcode"].ToString();
                 }
             }
             return model;
@@ -296,11 +296,12 @@ namespace Service
             {
                 strSql.Append(" where " + strWhere);
             }
-            strSql.AppendFormat("limit {0},{1}", (Current - 1) * PageSize, PageSize);
-            if (string.IsNullOrEmpty(orderby))
+            if (!string.IsNullOrEmpty(orderby))
             {
                 strSql.Append(" order by " + orderby);
             }
+            strSql.AppendFormat(" limit {0},{1}", (Current - 1) * PageSize, PageSize);
+
 
             return DbHelperMySQL.Query(strSql.ToString());
         }

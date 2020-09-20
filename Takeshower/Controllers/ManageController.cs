@@ -67,10 +67,10 @@ namespace Takeshower.Controllers
             string Current = System.Web.HttpContext.Current.Request["Current"] == null ? "1" : System.Web.HttpContext.Current.Request["Current"].ToString();
             CurrentPage = Convert.ToInt32(Current);
             dt = ProjectService.GetListByPageOne("", "ProjectId desc", CurrentPage, PageSize).Tables[0];
-
+            int total = ProjectService.GetRecordCount("");
             ViewBag.Table = dt;
             ViewBag.Current = CurrentPage;
-            ViewBag.Total = ProjectService.GetRecordCount("");
+            ViewBag.Total = (total + PageSize - 1) / PageSize;
             return View();
         }
 
@@ -114,6 +114,7 @@ namespace Takeshower.Controllers
 
             string tmepUrl = "../upload/" + lastName;
             Project temp = new Project();
+            temp = ProjectService.GetModel(id);
             temp.Qrcode = tmepUrl;
 
             if (ProjectService.Update(temp))
@@ -155,9 +156,10 @@ namespace Takeshower.Controllers
             string Current = System.Web.HttpContext.Current.Request["Current"] == null ? "1" : System.Web.HttpContext.Current.Request["Current"].ToString();
             CurrentPage = Convert.ToInt32(Current);
             dt = BookService.GetListByPageOne("", "BookId desc", CurrentPage, PageSize).Tables[0];
+            int total = ProjectService.GetRecordCount("");
             ViewBag.Table = dt;
             ViewBag.Current = CurrentPage;
-            ViewBag.Total = ProjectService.GetRecordCount("");
+            ViewBag.Total = (total + PageSize - 1) / PageSize;
             return View();
         }
     }

@@ -74,6 +74,7 @@
                                                 <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 401px;" aria-label="Browser: activate to sort column ascending">开始时间</th>
                                                 <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 374px;" aria-label="Platform(s): activate to sort column ascending">结束时间</th>
                                                 <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 229px;" aria-label="Engine version: activate to sort column ascending">可预约人数</th>
+                                                <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 229px;" aria-label="Engine version: activate to sort column ascending">验证二维码</th>
 
                                             </tr>
                                         </thead>
@@ -87,6 +88,7 @@
                                                         <td class=" ">@dt.Rows[i]["ProjectStartTime"]</td>
                                                         <td class=" ">@dt.Rows[i]["ProjectEndTime"]</td>
                                                         <td class="center ">@dt.Rows[i]["ProjectCount"]</td>
+                                                        <td class="center "><img src="@dt.Rows[i]["Qrcode"]" /> </td>
 
                                                     </tr>
                                                 }
@@ -100,9 +102,9 @@
                                         <div class="col-sm-6">
                                             <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
                                                 <ul class="pagination">
-                                                    <li class="paginate_button previous disabled" aria-controls="dataTables-example" tabindex="0" id="dataTables-example_previous"><a href="#" onclick="Previous()">上一页</a></li>
-                                                    <li class="paginate_button active" aria-controls="dataTables-example" tabindex="0"><a href="#" id="acurrent">1</a></li>
-                                                    <li class="paginate_button" aria-controls="dataTables-example" tabindex="0"><a href="#" id="atotal">共1页</a></li>
+                                                    <li class="paginate_button previous" aria-controls="dataTables-example" tabindex="0" id="dataTables-example_previous"><a href="#" onclick="Previous()">上一页</a></li>
+                                                    <li class="paginate_button active" aria-controls="dataTables-example" tabindex="0"><a href="#" id="acurrent">@ViewBag.Current</a></li>
+                                                    <li class="paginate_button" aria-controls="dataTables-example" tabindex="0"><a href="#" id="atotal">共 @ViewBag.Total 页</a></li>
                                                     <li class="paginate_button next" aria-controls="dataTables-example" tabindex="0" id="dataTables-example_next"><a href="#" onclick="next()">下一页</a></li>
                                                 </ul>
                                             </div>
@@ -139,13 +141,9 @@
         <!--<script src="~/assets/js/custom-scripts.js"></script>-->
     </div>
     <script type="text/javascript">
-        $.ready(function () {
-            var total =@ViewBag.Total;
-            $("#atotal").text('共' + total + '页');
-            $("#acurrent").text("@ViewBag.Current");
-        });
+
         function Previous() {
-            var current = $("#acurrent").val();
+            var current = $("#acurrent").text();
             if (current > 1) {
                 current--;
             }
@@ -156,13 +154,12 @@
             var para = {
                 Current: current,
             };
-            $.post(url, para, function (data) {
-
-            });
+            //$.post(url, para);
+            window.location.href = "Manage?Current=" + current;
 
         };
         function next() {
-            var current = $("#acurrent").val();
+            var current = $("#acurrent").text();
             if (current <@ViewBag.Total){
                 current++;
             }
@@ -170,12 +167,11 @@
                 return;
             }
             var url = '@Url.Action("Manage", "Manage")';
-            var para = {
-                Current: current,
-            };
-            $.post(url, para, function (data) {
-
-            });
+            //var para = {
+            //    Current: current,
+            //};
+            //$.post(url, para);
+            window.location.href = "Manage?Current=" + current;
 
         };
     </script>
