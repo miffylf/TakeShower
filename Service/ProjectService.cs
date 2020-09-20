@@ -38,32 +38,37 @@ namespace Service
         /// <summary>
         /// 增加一条数据
         /// </summary>
-        public bool Add(Project model)
+        public int Add(Project model)
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into project(");
-            strSql.Append("ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount)");
+            strSql.Append("ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount,BathId,Qrcode)");
             strSql.Append(" values (");
-            strSql.Append("@ProjectName,@ProjectStartTime,@ProjectEndTime,@ProjectCount)");
+            strSql.Append("@ProjectName,@ProjectStartTime,@ProjectEndTime,@ProjectCount,@BathId,@Qrcode);select @@IDENTITY");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255),
                     new MySqlParameter("@ProjectStartTime", MySqlDbType.DateTime),
                     new MySqlParameter("@ProjectEndTime", MySqlDbType.DateTime),
-                    new MySqlParameter("@ProjectCount", MySqlDbType.Int32,11)};
+                    new MySqlParameter("@ProjectCount", MySqlDbType.Int32,11),
+            new MySqlParameter("@BathId",MySqlDbType.Int32,11),
+             new MySqlParameter("@Qrcode", MySqlDbType.VarChar,255)};
             parameters[0].Value = model.ProjectName;
             parameters[1].Value = model.ProjectStartTime;
             parameters[2].Value = model.ProjectEndTime;
             parameters[3].Value = model.ProjectCount;
+            parameters[4].Value = model.BathId;
+            parameters[5].Value = model.Qrcode;
 
-            int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
-            if (rows > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            int rows = Convert.ToInt32(DbHelperMySQL.GetSingle(strSql.ToString(), parameters));
+            return rows;
+            //if (rows > 0)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
         /// <summary>
         /// 更新一条数据
@@ -75,19 +80,25 @@ namespace Service
             strSql.Append("ProjectName=@ProjectName,");
             strSql.Append("ProjectStartTime=@ProjectStartTime,");
             strSql.Append("ProjectEndTime=@ProjectEndTime,");
-            strSql.Append("ProjectCount=@ProjectCount");
+            strSql.Append("ProjectCount=@ProjectCount,");
+            strSql.Append("BathId=@BathId,");
+            strSql.Append("Qrcode=@Qrcode");
             strSql.Append(" where ProjectId=@ProjectId");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255),
                     new MySqlParameter("@ProjectStartTime", MySqlDbType.DateTime),
                     new MySqlParameter("@ProjectEndTime", MySqlDbType.DateTime),
                     new MySqlParameter("@ProjectCount", MySqlDbType.Int32,11),
+                    new MySqlParameter("@BathId",MySqlDbType.Int32,11),
+                     new MySqlParameter("@Qrcode",MySqlDbType.VarChar,255),
                     new MySqlParameter("@ProjectId", MySqlDbType.Int32,11)};
             parameters[0].Value = model.ProjectName;
             parameters[1].Value = model.ProjectStartTime;
             parameters[2].Value = model.ProjectEndTime;
             parameters[3].Value = model.ProjectCount;
-            parameters[4].Value = model.ProjectId;
+            parameters[4].Value = model.BathId;
+            parameters[5].Value = model.Qrcode;
+            parameters[6].Value = model.ProjectId;
 
             int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -151,7 +162,7 @@ namespace Service
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select ProjectId,ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount from project ");
+            strSql.Append("select ProjectId,ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount,BathId,Qrcode from project ");
             strSql.Append(" where ProjectId=@ProjectId");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@ProjectId", MySqlDbType.Int32)
@@ -199,6 +210,14 @@ namespace Service
                 {
                     model.ProjectCount = int.Parse(row["ProjectCount"].ToString());
                 }
+                if (row["BathId"] != null && row["BathId"].ToString() != "")
+                {
+                    model.BathId = int.Parse(row["BathId"].ToString());
+                }
+                if (row["Qrcode"] != null)
+                {
+                    model.ProjectName = row["Qrcode"].ToString();
+                }
             }
             return model;
         }
@@ -209,7 +228,7 @@ namespace Service
         public DataSet GetList(string strWhere, string orderby)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select ProjectId,ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount ");
+            strSql.Append("select ProjectId,ProjectName,ProjectStartTime,ProjectEndTime,ProjectCount,BathId,Qrcode ");
             strSql.Append(" FROM project ");
             if (strWhere.Trim() != "")
             {
@@ -266,6 +285,23 @@ namespace Service
             }
             strSql.Append(" ) TT");
             strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
+
+        public DataSet GetListByPageOne(string strWhere, string orderby, int Current, int PageSize)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM project ");
+            if (!string.IsNullOrEmpty(strWhere))
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.AppendFormat("limit {0},{1}", (Current - 1) * PageSize, PageSize);
+            if (string.IsNullOrEmpty(orderby))
+            {
+                strSql.Append(" order by " + orderby);
+            }
+
             return DbHelperMySQL.Query(strSql.ToString());
         }
 

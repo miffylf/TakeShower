@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-
+@using System.Data;
 <!DOCTYPE html>
 
 <html>
@@ -55,6 +55,12 @@
                     <li>
                         <a class="active-menu" href="Manage"><i class="fa fa-dashboard"></i> 预约管理</a>
                     </li>
+                    <li>
+                        <a class="active-menu" href="AddBath"><i class="fa fa-dashboard"></i> 添加澡堂</a>
+                    </li>
+                    <li>
+                        <a class="active-menu" href="BookList"><i class="fa fa-dashboard"></i> 预约查看</a>
+                    </li>
                 </ul>
 
             </div>
@@ -74,7 +80,18 @@
 
                                         <div class="form-group">
                                             <label>项目名称</label>
-                                            <input class="form-control" id="projectName" placeholder="项目名称">
+                                            @*<input class="form-control" id="projectName" placeholder="项目名称">*@
+                                            <select class="form-control" id="projectName">
+                                                @{
+                                                    DataTable dt = ViewBag.Bath as DataTable;
+                                                    for (int i = 0; i < dt.Rows.Count; i++)
+                                                    {
+                                                        <option value="@dt.Rows[i]["BathId"]">@dt.Rows[i]["BathName"]</option>
+                                                    }
+                                                }
+
+
+                                            </select>
                                         </div>
                                         <div class="form-group" id='datetimepicker2'>
                                             <label>开始时间</label>
@@ -178,12 +195,14 @@
                 endTime: endTime,
                 count: count,
             };
-            $.post(url, param, function () {
+            $.post(url, param, function (data) {
                 if (data == "Success") {
-
+                    alert("添加成功");
+                    window.location.href = "Manage";
                 }
                 else {
-
+                    alert("添加失败");
+                    window.location.href = "Manage";
                 }
             });
 

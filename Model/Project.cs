@@ -20,6 +20,8 @@ namespace Model
         private DateTime? _projectstarttime;
         private DateTime? _projectendtime;
         private int? _projectcount;
+        private int? _bathid;
+        private string _qrcode;
         /// <summary>
         /// auto_increment
         /// </summary>
@@ -59,6 +61,18 @@ namespace Model
         {
             set { _projectcount = value; }
             get { return _projectcount; }
+        }
+
+        public int? BathId
+        {
+            set { _bathid = value; }
+            get { return _bathid; }
+        }
+
+        public string Qrcode
+        {
+            set { _qrcode = value; }
+            get { return _qrcode; }
         }
         #endregion Model
 

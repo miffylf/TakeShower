@@ -42,18 +42,22 @@ namespace Service
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into book(");
-            strSql.Append("DUserId,BookTime,ProjectId,ProjectName)");
+            strSql.Append("DUserId,BookTime,ProjectId,ProjectName,UserName,IsVerification)");
             strSql.Append(" values (");
-            strSql.Append("@DUserId,@BookTime,@ProjectId,@ProjectName)");
+            strSql.Append("@DUserId,@BookTime,@ProjectId,@ProjectName,@UserName,@IsVerification)");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@DUserId", MySqlDbType.VarChar,255),
                     new MySqlParameter("@BookTime", MySqlDbType.DateTime),
                     new MySqlParameter("@ProjectId", MySqlDbType.Int32,11),
-                    new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255)};
+                    new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255),
+                    new MySqlParameter("@UserName", MySqlDbType.VarChar,255),
+                    new MySqlParameter("@IsVerification", MySqlDbType.Bit)};
             parameters[0].Value = model.DUserId;
             parameters[1].Value = model.BookTime;
             parameters[2].Value = model.ProjectId;
             parameters[3].Value = model.ProjectName;
+            parameters[4].Value = model.UserName;
+            parameters[5].Value = model.IsVerification;
 
             int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -75,19 +79,25 @@ namespace Service
             strSql.Append("DUserId=@DUserId,");
             strSql.Append("BookTime=@BookTime,");
             strSql.Append("ProjectId=@ProjectId,");
-            strSql.Append("ProjectName=@ProjectName");
+            strSql.Append("ProjectName=@ProjectName,");
+            strSql.Append("UserName=@UserName,");
+            strSql.Append("IsVerification=@IsVerification");
             strSql.Append(" where BookId=@BookId");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@DUserId", MySqlDbType.VarChar,255),
                     new MySqlParameter("@BookTime", MySqlDbType.DateTime),
                     new MySqlParameter("@ProjectId", MySqlDbType.Int32,11),
                     new MySqlParameter("@ProjectName", MySqlDbType.VarChar,255),
+                    new MySqlParameter("@UserName", MySqlDbType.VarChar,255),
+                    new MySqlParameter("@IsVerification", MySqlDbType.Bit),
                     new MySqlParameter("@BookId", MySqlDbType.Int32,11)};
             parameters[0].Value = model.DUserId;
             parameters[1].Value = model.BookTime;
             parameters[2].Value = model.ProjectId;
             parameters[3].Value = model.ProjectName;
-            parameters[4].Value = model.BookId;
+            parameters[4].Value = model.UserName;
+            parameters[5].Value = model.IsVerification;
+            parameters[6].Value = model.BookId;
 
             int rows = DbHelperMySQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -151,7 +161,7 @@ namespace Service
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select BookId,DUserId,BookTime,ProjectId,ProjectName from book ");
+            strSql.Append("select BookId,DUserId,BookTime,ProjectId,ProjectName,UserName,IsVerification from book ");
             strSql.Append(" where BookId=@BookId");
             MySqlParameter[] parameters = {
                     new MySqlParameter("@BookId", MySqlDbType.Int32)
@@ -199,6 +209,21 @@ namespace Service
                 {
                     model.ProjectName = row["ProjectName"].ToString();
                 }
+                if (row["UserName"] != null)
+                {
+                    model.UserName = row["UserName"].ToString();
+                }
+                if (row["IsVerification"] != null && row["IsVerification"].ToString() != "")
+                {
+                    if ((row["IsVerification"].ToString() == "1") || (row["IsVerification"].ToString().ToLower() == "true"))
+                    {
+                        model.IsVerification = true;
+                    }
+                    else
+                    {
+                        model.IsVerification = false;
+                    }
+                }
             }
             return model;
         }
@@ -209,7 +234,7 @@ namespace Service
         public DataSet GetList(string strWhere, string orderby)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select BookId,DUserId,BookTime,ProjectId,ProjectName ");
+            strSql.Append("select BookId,DUserId,BookTime,ProjectId,ProjectName,UserName,IsVerification ");
             strSql.Append(" FROM book ");
             if (strWhere.Trim() != "")
             {
@@ -269,6 +294,22 @@ namespace Service
             return DbHelperMySQL.Query(strSql.ToString());
         }
 
+        public DataSet GetListByPageOne(string strWhere, string orderby, int Current, int PageSize)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM book ");
+            if (!string.IsNullOrEmpty(strWhere))
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.AppendFormat("limit {0},{1}", (Current - 1) * PageSize, PageSize);
+            if (string.IsNullOrEmpty(orderby))
+            {
+                strSql.Append(" order by " + orderby);
+            }
+
+            return DbHelperMySQL.Query(strSql.ToString());
+        }
         /*
 		/// <summary>
 		/// 分页获取数据列表

@@ -1,0 +1,185 @@
+﻿
+@{
+    Layout = null;
+}
+@using System.Data;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>预约后台系统管理 - </title>
+    <!-- Bootstrap Styles-->
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="~/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- Morris Chart Styles-->
+    <link href="~/assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <!-- Custom Styles-->
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    <!-- Google Fonts-->
+    <link href="~/assets/css/font.css" rel='stylesheet' type='text/css' />
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><i class="fa fa-comments"></i> <strong>预约管理 </strong></a>
+            </div>
+
+
+
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div id="sideNav" href=""><i class="fa fa-caret-right"></i></div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+
+                    <li>
+                        <a class="active-menu" href="Manage"><i class="fa fa-dashboard"></i> 预约管理</a>
+                    </li>
+                    <li>
+                        <a class="active-menu" href="AddBath"><i class="fa fa-dashboard"></i> 添加澡堂</a>
+                    </li>
+                    <li>
+                        <a class="active-menu" href="BookList"><i class="fa fa-dashboard"></i> 预约查看</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </nav>
+        <div id="page-wrapper">
+            <div id="page-inner">
+                <div class="row">
+
+                    <div class="panel panel-default">
+                        @*<div class="panel-heading">
+                                <a href="AddProject" class="btn btn-danger">新建项目</a>
+                            </div>*@
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <div id="dataTables-example_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                                    <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example" aria-describedby="dataTables-example_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 274px;" aria-sort="ascending" aria-label="Rendering engine: activate to sort column ascending">项目名称</th>
+                                                <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 401px;" aria-label="Browser: activate to sort column ascending">预约人</th>
+                                                <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 374px;" aria-label="Platform(s): activate to sort column ascending">预约时间</th>
+                                                <th class="sorting" tabindex="0" aria-controls="dataTables-example" rowspan="1" colspan="1" style="width: 229px;" aria-label="Engine version: activate to sort column ascending">是否验证</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                DataTable dt = ViewBag.Table as DataTable;
+                                                for (int i = 0; i < dt.Rows.Count; i++)
+                                                {
+                                                    <tr class="gradeA odd">
+                                                        <td class="sorting_1">@dt.Rows[i]["ProjectName"]</td>
+                                                        <td class=" ">@dt.Rows[i]["UserName"]</td>
+                                                        <td class=" ">@dt.Rows[i]["BookTime"]</td>
+                                                        <td class="center ">
+                                                            @{
+                                                                if (Convert.ToBoolean(dt.Rows[i]["IsVerification"]))
+                                                                {
+                                                                    Output.Write("已验证");
+                                                                }
+                                                                else
+                                                                {
+                                                                    Output.Write("未验证");
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                    </tr>
+                                                }
+
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
+                                                <ul class="pagination">
+                                                    <li class="paginate_button previous disabled" aria-controls="dataTables-example" tabindex="0" id="dataTables-example_previous"><a href="#" onclick="Previous()">上一页</a></li>
+                                                    <li class="paginate_button active" aria-controls="dataTables-example" tabindex="0"><a href="#" id="acurrent">1</a></li>
+                                                    <li class="paginate_button" aria-controls="dataTables-example" tabindex="0"><a href="#" id="atotal">共1页</a></li>
+                                                    <li class="paginate_button next" aria-controls="dataTables-example" tabindex="0" id="dataTables-example_next"><a href="#" onclick="next()">下一页</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /. ROW  -->
+                <footer><p>Copyright &copy; 2020.张掖大地信息科技有限责任公司 All rights reserved.</p></footer>
+            </div>
+            <!-- /. PAGE INNER  -->
+        </div>
+        <!-- /. WRAPPER  -->
+        <!-- JS Scripts-->
+        <!-- jQuery Js -->
+        <script src="~/assets/js/jquery-1.10.2.js"></script>
+        <!-- Bootstrap Js -->
+        <script src="~/assets/js/bootstrap.min.js"></script>
+
+
+    </div>
+    <script type="text/javascript">
+        $.ready(function () {
+            var total =@ViewBag.Total;
+            $("#atotal").text('共' + total + '页');
+            $("#acurrent").text("@ViewBag.Current");
+        });
+        function Previous() {
+            var current = $("#acurrent").val();
+            if (current > 1) {
+                current--;
+            }
+            else {
+                return;
+            }
+            var url = '@Url.Action("Manage", "Manage")';
+            var para = {
+                Current: current,
+            };
+            $.post(url, para, function (data) {
+
+            });
+
+        };
+        function next() {
+            var current = $("#acurrent").val();
+            if (current <@ViewBag.Total){
+                current++;
+            }
+            else {
+                return;
+            }
+            var url = '@Url.Action("Manage", "Manage")';
+            var para = {
+                Current: current,
+            };
+            $.post(url, para, function (data) {
+
+            });
+
+        };
+    </script>
+</body>
+</html>

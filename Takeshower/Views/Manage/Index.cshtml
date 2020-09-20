@@ -92,7 +92,7 @@
                                                             <span class="lbl"> Remember Me</span>
                                                         </label>*@
 
-                                                    <button type="button" class="width-35 pull-right btn btn-sm btn-primary">
+                                                    <button type="button" id="Login" class="width-35 pull-right btn btn-sm btn-primary">
                                                         <i class="ace-icon fa fa-key"></i>
                                                         <span class="bigger-110">登录</span>
                                                     </button>
@@ -350,11 +350,11 @@
                 alert("两次密码输入不一致");
                 return;
             }
-            var url =@Url.Action("Regist", "Manage");
+            var url ='@Url.Action("Regist", "Manage")';
             var param = {
-                emial=email,
-                username=username,
-                password=password,
+                emial:email,
+                username:username,
+                password:password,
             };
             $.post(url, param, function (data) {
 
@@ -369,6 +369,30 @@
                 }
             });
         });
+        $("#Login").click(function () {
+            var username = $("#username").val();
+            var password = $("#password").val();
+            if (username == null) {
+                alert("请输入用户名");
+                return;
+            }
+            if (password == null) {
+                alert("请输入密码");
+                return;
+            }
+             var url ='@Url.Action("Login", "Manage")';
+            var param = {
+                username:username,
+                password:password,
+            };
+            $.post(url, param, function (data) {
+
+                if (data == "Success") {
+                    window.location.href = "Manage";
+                }
+            });
+        });
+
     </script>
 </body>
 </html>

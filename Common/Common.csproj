@@ -39,9 +39,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="QRCoder, Version=1.3.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -70,6 +75,7 @@
     <Compile Include="JsTicket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PubConstant.cs" />
+    <Compile Include="QRcode.cs" />
     <Compile Include="RegexHelper.cs" />
     <Compile Include="TokenModel.cs" />
     <Compile Include="Tools.cs" />

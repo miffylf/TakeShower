@@ -1,0 +1,66 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>BookVerification</title>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/static/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+    <script type="text/javascript">
+
+        dd.ready(function () {
+            dd.runtime.permission.requestAuthCode({
+                corpId: 'ding1f18b35b5e0f824c35c2f4657eb6378f', // 企业id
+                onSuccess: function (info) {
+                    code = info.code // 通过该免登授权码可以获取用户身份
+                    alert(code);
+                    @*alert(@ViewBag.ClassesId);*@
+                @*var url = "/Book/Book?code=" + code + "&ProjectId=" + @ViewBag.ProjectId ;
+                    //alert(url);
+                    window.location.href = url;*@
+                    var url = '@Url.Action("Verification","Book")';
+                    var param={
+                        code: code,
+                        ProjectId:@ViewBag.ProjectId,
+                    };
+                    $.post(url, param, function (data) {
+                        if (data == "Success") {
+                            alert("验证成功");
+
+                        }
+                        else {
+                            alert("验证失败");
+
+                        }
+                    });
+
+
+                },
+                onFail: function (err) {
+                    alert(err);
+                }
+            });
+            dd.error(function (err) {
+                alert('aaa4');//验证失败
+                alert("进入到error中");
+                document.getElementById("userName").innerHTML = "验证出错";
+                alert('dd error: ' + JSON.stringify(err));
+            });
+        });
+
+
+
+    </script>
+</head>
+<body>
+    <div>
+    </div>
+</body>
+</html>

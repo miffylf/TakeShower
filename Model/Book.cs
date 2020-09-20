@@ -20,6 +20,8 @@ namespace Model
         private DateTime? _booktime;
         private int? _projectid;
         private string _projectname;
+        private string _username;
+        private bool _isverification;
         /// <summary>
         /// auto_increment
         /// </summary>
@@ -59,6 +61,22 @@ namespace Model
         {
             set { _projectname = value; }
             get { return _projectname; }
+        }
+        /// <summary>
+		/// 
+		/// </summary>
+		public string UserName
+        {
+            set { _username = value; }
+            get { return _username; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsVerification
+        {
+            set { _isverification = value; }
+            get { return _isverification; }
         }
         #endregion Model
 

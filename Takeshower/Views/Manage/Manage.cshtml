@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 @using System.Data;
@@ -46,6 +45,12 @@
                     <li>
                         <a class="active-menu" href="Manage"><i class="fa fa-dashboard"></i> 预约管理</a>
                     </li>
+                    <li>
+                        <a class="active-menu" href="AddBath"><i class="fa fa-dashboard"></i> 添加澡堂</a>
+                    </li>
+                    <li>
+                        <a class="active-menu" href="BookList"><i class="fa fa-dashboard"></i> 预约查看</a>
+                    </li>
                 </ul>
 
             </div>
@@ -57,7 +62,7 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a href="#" class="btn btn-danger">新建项目</a>
+                            <a href="AddProject" class="btn btn-danger">新建项目</a>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -122,39 +127,57 @@
         <script src="~/assets/js/bootstrap.min.js"></script>
 
         <!-- Metis Menu Js -->
-        <script src="~/assets/js/jquery.metisMenu.js"></script>
+        <!--<script src="~/assets/js/jquery.metisMenu.js"></script>-->
         <!-- Morris Chart Js -->
-        <script src="~/assets/js/morris/raphael-2.1.0.min.js"></script>
+        <!--<script src="~/assets/js/morris/raphael-2.1.0.min.js"></script>
         <script src="~/assets/js/morris/morris.js"></script>
 
 
         <script src="~/assets/js/easypiechart.js"></script>
-        <script src="~/assets/js/easypiechart-data.js"></script>
-
-
+        <script src="~/assets/js/easypiechart-data.js"></script>-->
         <!-- Custom Js -->
-        <script src="~/assets/js/custom-scripts.js"></script>
+        <!--<script src="~/assets/js/custom-scripts.js"></script>-->
     </div>
     <script type="text/javascript">
         $.ready(function () {
             var total =@ViewBag.Total;
             $("#atotal").text('共' + total + '页');
+            $("#acurrent").text("@ViewBag.Current");
         });
         function Previous() {
             var current = $("#acurrent").val();
             if (current > 1) {
                 current--;
             }
+            else {
+                return;
+            }
             var url = '@Url.Action("Manage", "Manage")';
             var para = {
                 Current: current,
             };
-            $.post(url, para, function () {
+            $.post(url, para, function (data) {
 
             });
 
         };
+        function next() {
+            var current = $("#acurrent").val();
+            if (current <@ViewBag.Total){
+                current++;
+            }
+            else {
+                return;
+            }
+            var url = '@Url.Action("Manage", "Manage")';
+            var para = {
+                Current: current,
+            };
+            $.post(url, para, function (data) {
 
+            });
+
+        };
     </script>
 </body>
 </html>

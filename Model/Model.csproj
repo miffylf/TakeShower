@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bath.cs" />
     <Compile Include="Book.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Project.cs" />

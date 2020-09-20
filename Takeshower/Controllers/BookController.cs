@@ -152,5 +152,35 @@ namespace Takeshower.Controllers
             ViewBag.dt = dt;
             return View();
         }
+
+        public ActionResult BookVerification()
+        {
+            string ProjectId = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["ProjectId"]) ? string.Empty : System.Web.HttpContext.Current.Request["ProjectId"].ToString();
+            ViewBag.ProjectId = ProjectId;
+            return View();
+        }
+
+        public ActionResult Verification()
+        {
+            UserModel temp = new UserModel();
+            string ProjectId = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["ProjectId"]) ? string.Empty : System.Web.HttpContext.Current.Request["ProjectId"].ToString();
+            string code = string.IsNullOrEmpty(System.Web.HttpContext.Current.Request["code"]) ? string.Empty : System.Web.HttpContext.Current.Request["code"].ToString();
+            if (!string.IsNullOrEmpty(code))
+            {
+                temp = GetUserMode(ViewBag.accessToken, code);
+            }
+            UserInfo userInfo = EnterpriseBusiness.GetUserInfo(ViewBag.accessToken, temp.userid);
+            Book item = new Book();
+            item = BookService.DataRowToModel(BookService.GetList(" ProjectId = " + ProjectId + " and DuserId= '" + userInfo.userid + "'", "").Tables[0].Rows[0]);
+            item.IsVerification = true;
+            if (BookService.Update(item))
+            {
+                return Content("Success");
+            }
+            else
+            {
+                return Content("Fail");
+            }
+        }
     }
 }
